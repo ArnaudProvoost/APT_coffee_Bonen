@@ -42,6 +42,7 @@ public class BoonController {
 
     @PutMapping("/boons")
     public Boon updateBoon(@RequestBody Boon updatedBoon) {
+
         Boon retrievedBoon = boonRepository.findBoonById(updatedBoon.getId());
 
         retrievedBoon.setLand(updatedBoon.getLand());

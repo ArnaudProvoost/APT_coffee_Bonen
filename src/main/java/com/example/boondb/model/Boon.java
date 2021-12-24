@@ -1,9 +1,6 @@
 package com.example.boondb.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Boon {
@@ -13,6 +10,7 @@ public class Boon {
 
     private String naam;
     private String land;
+
 
     public Boon(String naam, String land) {
         this.naam = naam;
