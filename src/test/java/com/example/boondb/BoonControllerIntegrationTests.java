@@ -1,5 +1,6 @@
 package com.example.boondb;
 
+import com.example.boondb.controller.BoonController;
 import com.example.boondb.model.Boon;
 import com.example.boondb.repository.BoonRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,6 +49,7 @@ public class BoonControllerIntegrationTests {
 
     @AfterEach
     public void afterAllTests() {
+        boonRepository.deleteAll();
     }
 
     private ObjectMapper mapper = new ObjectMapper();
