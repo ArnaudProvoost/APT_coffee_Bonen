@@ -43,7 +43,7 @@ public class BoonController {
     @PutMapping("/boons")
     public Boon updateBoon(@RequestBody Boon updatedBoon) {
 
-        Boon retrievedBoon = boonRepository.findBoonById(updatedBoon.getId());
+        Boon retrievedBoon = boonRepository.findBoonByUID(updatedBoon.getUID());
 
         retrievedBoon.setLand(updatedBoon.getLand());
         retrievedBoon.setNaam(updatedBoon.getNaam());
@@ -53,9 +53,9 @@ public class BoonController {
         return retrievedBoon;
     }
 
-    @DeleteMapping("/boons/{id}")
-    public ResponseEntity deleteBoon(@PathVariable Integer id) {
-        Boon boon = boonRepository.findBoonById(id);
+    @DeleteMapping("/boons/{UID}")
+    public ResponseEntity deleteBoon(@PathVariable String UID) {
+        Boon boon = boonRepository.findBoonByUID(UID);
 
         if (boon != null){
             boonRepository.delete(boon);
@@ -69,9 +69,9 @@ public class BoonController {
     @PostConstruct
     public void fillDB() {
         if(boonRepository.count() == 0){
-            boonRepository.save(new Boon("Coffea Arabica","Brazilië"));
-            boonRepository.save(new Boon("Coffea Robusta","Java"));
-            boonRepository.save(new Boon("Coffea Liberica","Uganda"));
+            boonRepository.save(new Boon("Coffea Arabica","Brazilië","1"));
+            boonRepository.save(new Boon("Coffea Robusta","Java","2"));
+            boonRepository.save(new Boon("Coffea Liberica","Uganda","3"));
         }
 
         System.out.println(boonRepository.findBoonByNaamContaining("Arabica"));

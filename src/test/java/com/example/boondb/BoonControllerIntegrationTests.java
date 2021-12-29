@@ -28,11 +28,11 @@ public class BoonControllerIntegrationTests {
     @Autowired
     private BoonRepository boonRepository;
 
-    private Boon boonNaam1land1 = new Boon("a","1");
-    private Boon boonNaam1land2 = new Boon("b","2");
-    private Boon boonNaam2land1 = new Boon("c","1");
-    private Boon boonTobeEdited = new Boon ("eee","3");
-    private Boon boonToBeDeleted = new Boon("ddd","1");
+    private Boon boonNaam1land1 = new Boon("a","1", "1");
+    private Boon boonNaam1land2 = new Boon("b","2", "2");
+    private Boon boonNaam2land1 = new Boon("c","1", "3");
+    private Boon boonTobeEdited = new Boon ("eee","3", "4");
+    private Boon boonToBeDeleted = new Boon("ddd","1", "5");
 
     @BeforeEach
     public void beforeAllTests() {
@@ -86,7 +86,7 @@ public class BoonControllerIntegrationTests {
 
     @Test
     public void givenBoon_whenPostBoon_thenReturnJsonBoon() throws Exception {
-        Boon boon = new Boon("Arabica", "België");
+        Boon boon = new Boon("Arabica", "België", "6");
 
         mockMvc.perform(post("/boons")
                 .content(mapper.writeValueAsString(boon))
@@ -100,7 +100,7 @@ public class BoonControllerIntegrationTests {
     @Test
     public void givenBoon_whenPutBoon_thenReturnJsonBoon() throws Exception {
 
-        Boon updatedBoon = new Boon("Arabica", "België");
+        Boon updatedBoon = new Boon("Arabica", "België", "4");
 
         mockMvc.perform(put("/boons")
                         .content(mapper.writeValueAsString(updatedBoon))
@@ -112,9 +112,9 @@ public class BoonControllerIntegrationTests {
     }
 
     @Test
-    public void givenReview_whenDeleteReview_thenStatusOk() throws Exception {
+    public void givenBoon_whenDeleteBoon_thenStatusOk() throws Exception {
 
-        mockMvc.perform(delete("/boons/{id}",4)
+        mockMvc.perform(delete("/boons/{UID}","5")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

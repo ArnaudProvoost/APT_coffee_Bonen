@@ -9,6 +9,7 @@ public interface BoonRepository extends JpaRepository<Boon,Integer> {
     List<Boon> findBoonByNaamContaining(String naam);
     List<Boon> findBoonByLandContaining(String land);
     Boon findBoonById(int id);
+    Boon findBoonByUID(String UID);
 
 
 }

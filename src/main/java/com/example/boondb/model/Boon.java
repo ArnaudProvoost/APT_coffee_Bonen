@@ -10,11 +10,13 @@ public class Boon {
 
     private String naam;
     private String land;
+    private String UID;
 
 
-    public Boon(String naam, String land) {
+    public Boon(String naam, String land, String UID) {
         this.naam = naam;
         this.land = land;
+        this.UID = UID;
     }
 
     public Boon() {
@@ -43,4 +45,8 @@ public class Boon {
     public void setLand(String land) {
         this.land = land;
     }
+
+    public String getUID() { return UID;}
+
+    public void setUID(String UID) { this.UID = UID;}
 }
