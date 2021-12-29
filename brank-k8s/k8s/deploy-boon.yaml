@@ -1,0 +1,92 @@
+apiVersion: v1                    # API version
+kind: Service                     # Type of kubernetes resource
+metadata:
+  name: boon-service-mysql   # Name of the service
+  labels:                         # Labels that will be applied to the service
+    app: boon-service
+spec:
+  ports:
+    - port: 3306
+  selector:                       # Selects any Pod with labels `app=book-info-service,tier=mysql`
+    app: boon-service
+    tier: mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment                    # Type of the kubernetes resource
+metadata:
+  name: boon-service-mysql-deployment           # Name of the deployment
+  labels:                           # Labels applied to this deployment
+    app: boon-service
+spec:
+  selector:
+    matchLabels:                    # This deployment applies to the Pods matching the specified labels
+      app: boon-service
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:                         # Template for the Pods in this deployment
+    metadata:
+      labels:                       # Labels to be applied to the Pods in this deployment
+        app: boon-service
+        tier: mysql
+    spec:                           # The spec for the containers that will be run inside the Pods in this deployment
+      containers:
+        - image: mysql                # The container image
+          name: mysql
+          env:                        # Environment variables passed to the container
+            - name: MYSQL_ROOT_PASSWORD
+              value: "password"           # Read environment variables from kubernetes secrets
+          ports:
+            - containerPort: 3306       # The port that the container exposes
+              name: mysql
+---
+apiVersion: apps/v1           # API version
+kind: Deployment              # Type of kubernetes resource
+metadata:
+  name: boon-service-server-deployment    # Name of the deployment
+  labels:                     # Labels that will be applied to this deployment
+    app: boon-service-server
+spec:
+  replicas: 1                 # No. of replicas/pods to run in this deployment
+  selector:
+    matchLabels:              # The deployment applies to any pods mayching the specified labels
+      app: boon-service-server
+  template:                   # Template for creating the pods in this deployment
+    metadata:
+      labels:                 # Labels that will be applied to each Pod in this deployment
+        app: boon-service-server
+    spec:                     # Spec for the containers that will be run in the Pods
+      containers:
+        - name: boon-service-server
+          image: arnaud27280/boon-service
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8051 # The port that the container exposes
+          resources:
+            limits:
+              cpu: 0.2
+              memory: "200Mi"
+          env:                    # Environment variables supplied to the Pod
+            - name: MYSQL_DB_USERNAME
+              value: "root"
+            - name: MYSQL_DB_PASSWORD
+              value: "password"
+            - name: MYSQL_DB_HOST
+              value: "boon-service-mysql"
+---
+apiVersion: v1                      # API version
+kind: Service                       # Type of the kubernetes resource
+metadata:
+  name: boon-service-server    # Name of the service
+  labels:                           # Labels that will be applied to this service
+    app: boon-service-server
+spec:
+  type: NodePort                    # The service will be exposed by opening a Port on each node and proxying it. Allowing connections from outside the cluster
+  selector:
+    app: boon-service-server   # The service exposes Pods with label `app=book-info-service-server`
+  ports:                            # Forward incoming connections on port 8080 to the target port 8051
+    - name: http
+      port: 8051
+      targetPort: 8051
